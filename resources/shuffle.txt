@@ -1,0 +1,9 @@
+    function shuffleArray(myArray) {
+        var randNum, tempStore, j;
+        for (j = myArray.length - 1; j>0; j--) {
+            randNum = Math.floor(Math.random() * (j + 1));
+            tempStore = myArray[j];
+            myArray[j] = myArray[randNum];
+            myArray[randNum] = tempStore;
+        }
+    };
