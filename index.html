@@ -34,13 +34,14 @@
 ];
 
  // turn images into html strings to shove into trials
- var stim_off = '<img src = resources/images/GREY.png height = 200 width = 200> </img>'
- var shock_display = '<img src = resources/images/shock.png height = 250 width = 250> </img>'
- var blank = '<img src = resources/images/BLANK.png height = 250 width = 250> </img>'
+ var stim_off = '<img src = resources/images/GREY.png height = 200 width = 200></img>'
+ var shock_display = '<img src = resources/images/shock.png height = 250 width = 250></img>'
+ var blank = '<img src = resources/images/BLANK.png height = 250 width = 250></img>'
 
 
   // set up counterbalancing + participant condition.
-  var num_random = Math.floor(Math.random() * 6) + 1;
+  var cb = Math.floor(Math.random() * 4) + 1;
+  var group = Math.floor(Math.random() * 3) + 1;
 
   // Sample type (mturk or sona_online?)
   var sample = "sona_online"
@@ -49,35 +50,51 @@
   var turkcode = (Math.floor(Math.random() * 69696969) * 919).toString();
 
   // set up counterbalancing for red/blue as target cue
-  if (num_random % 2 === 0) {
-    var cb = 1
-    var stim_cue = '<img src = resources/images/BLUE.png height = 200 width = 200> </img>';
-    var stim_context = '<img src = resources/images/RED.png height = 200 width = 200> </img>';
+  if (cb == 1) {
+    var stim_cue = '<img src = resources/images/BLUE.png height = 200 width = 200></img>';
+    var stim_context = '<img src = resources/images/RED.png height = 200 width = 200></img>';
     var cue_colour = 'blue';
     var con_colour = 'red';
+    // if group 2, counterbalance first colour shown in training instructions
+    var cue_first = stim_cue
+    var cue_second = stim_context
 
-  } else {
-    var cb = 2
-    var stim_cue = '<img src = resources/images/RED.png height = 200 width = 200> </img>';
-    var stim_context = '<img src = resources/images/BLUE.png height = 200 width = 200> </img>';
+  } else if (cb == 2) {
+    var stim_cue = '<img src = resources/images/RED.png height = 200 width = 200></img>';
+    var stim_context = '<img src = resources/images/BLUE.png height = 200 width = 200></img>';
     var cue_colour = 'red';
     var con_colour = 'blue';
-  };
+    var cue_first = stim_cue
+    var cue_second = stim_context
 
-  // if (num_random % 3 === 0) {
-  //   group = 1
-  //   groupname = "single"
-  // } else if (num_random % 2 === 0) {
-    group = 2
+  } else if (cb == 3) {
+    var stim_cue = '<img src = resources/images/BLUE.png height = 200 width = 200></img>';
+    var stim_context = '<img src = resources/images/RED.png height = 200 width = 200></img>';
+    var cue_colour = 'blue';
+    var con_colour = 'red';
+    var cue_first = stim_context
+    var cue_second = stim_cue
+
+  } else if (cb == 4) {
+    var stim_cue = '<img src = resources/images/RED.png height = 200 width = 200></img>';
+    var stim_context = '<img src = resources/images/BLUE.png height = 200 width = 200></img>';
+    var cue_colour = 'red';
+    var con_colour = 'blue';
+    var cue_first = stim_context
+    var cue_second = stim_cue
+  }; 
+
+  if (group == 1) {
+    groupname = "single"
+  } else if (group == 2) {
     groupname = "hidden alt"
-  //   // stim_context = stim_broken
-  // } else {
-  //   group = 3
-  //   groupname = "context alt"
-  // };
+  } else if (group == 3) {
+    groupname = "context alt"
+  };
 
   // console.log('group ' + group);
   // console.log(cue_colour);
+  // console.log(cue_first);
 
   var demographics_age = {
     type: "survey-html-form",
@@ -278,28 +295,6 @@
     trial_duration: 1000,
   };
 
-  var cueon_contextoff_display = {
-    type: "html-keyboard-response",
-    stimulus: stim_cue + stim_off + 
-      '<p></p>' +
-      blank +
-      whitespace +
-      whitespace,
-    response_ends_trial: false,
-    trial_duration: 1000,
-  };
-
-  var cueoff_contextoff_display = {
-    type: "html-keyboard-response",
-    stimulus: stim_off + stim_off + 
-      '<p></p>' +
-      blank +
-      whitespace +
-      whitespace,
-    response_ends_trial: false,
-    trial_duration: 1000,
-  };
-
   var shock_cueon_contexton_delay = {
     type: "html-keyboard-response",
     stimulus: stim_cue + stim_context + 
@@ -354,9 +349,9 @@
     }
   };
 
-  var noshock_cueon_contextoff_delay = {
+  var noshock_cueon_contexton_delay = {
     type: "html-keyboard-response",
-    stimulus: stim_cue + stim_off +
+    stimulus: stim_cue + stim_context +
       '<p></p>' +
       '<p> Mr X was not shocked </p>' +
       blank + 
@@ -365,9 +360,9 @@
     trial_duration: 1000
   }
 
-  var noshock_cueon_contextoff_prompt = {
+  var noshock_cueon_contexton_prompt = {
     type: "html-keyboard-response",
-    stimulus: stim_cue + stim_off + 
+    stimulus: stim_cue + stim_context + 
       '<p></p>' +
       '<p> Mr X was not shocked </p>' +
       blank + 
@@ -381,9 +376,9 @@
     }
   };
 
-  var noshock_cueoff_contextoff_delay = {
+  var noshock_cueoff_contexton_delay = {
     type: "html-keyboard-response",
-    stimulus: stim_off + stim_off + 
+    stimulus: stim_off + stim_context + 
       '<p></p>' +
       '<p> Mr X was not shocked </p>' +
       blank + 
@@ -392,9 +387,9 @@
     trial_duration: 1000
   }
 
-  var noshock_cueoff_contextoff_prompt = {
+  var noshock_cueoff_contexton_prompt = {
     type: "html-keyboard-response",
-    stimulus: stim_off + stim_off + 
+    stimulus: stim_off + stim_context + 
       '<p></p>' +
       '<p> Mr X was not shocked </p>' +
       blank + 
@@ -410,8 +405,8 @@
 
   // set up training trials for A B C D cells (contingency table)
   trial_num = 0;
-
-    var training_trialA = {
+if (group < 3) {
+  var training_trialA = {
       timeline: [
         cueon_display,
         shock_cueon_delay,
@@ -458,6 +453,56 @@
         trialtype: 'D',
       }
     };
+} else if (group == 3) {
+  var training_trialA = {
+      timeline: [
+        cueon_contexton_display,
+        shock_cueon_contexton_delay,
+        shock_cueon_contexton_prompt
+      ],
+      data: {
+        phase: 'training',
+        trialtype: 'A',
+      },
+    };
+
+    var training_trialB = {
+      timeline: [
+        cueon_contexton_display,
+        noshock_cueon_contexton_delay,
+        noshock_cueon_contexton_prompt,
+      ],
+      data: {
+        phase: 'training',
+        trialtype: 'B',
+      },
+    };
+
+    var training_trialC = {
+      timeline: [
+        cueoff_contexton_display,
+        shock_cueoff_contexton_delay,
+        shock_cueoff_contexton_prompt,
+      ],
+      data: {
+        phase: 'training',
+        trialtype: 'C',
+      },
+    };
+
+    var training_trialD = {
+      timeline: [
+        cueoff_contexton_display,
+        noshock_cueoff_contexton_delay,
+        noshock_cueoff_contexton_prompt
+      ],
+      data: {
+        phase: 'training',
+        trialtype: 'D',
+      }
+    };
+}
+
 
   // input distribution of training trials per block (18/6/6/2)
   var num_training_trialA = 18;
@@ -469,7 +514,7 @@
 
   // set up training trial order for all blocks
   var timeline_training_trials = [];
-
+ 
   var training_trials_intro_delay = {
     type: "html-keyboard-response",
     stimulus: "<p> Thank you, the task will begin shortly </p>",
@@ -559,7 +604,7 @@
       ],
       button_label: "Continue",
       require_movement: true,
-      prompt: "<p> Imagine Mr X observed the shock machine 100 times and only saw the " + cue_colour + " light on.</p>" +
+      prompt: "<p> Imagine Mr X observed the shock machine with the <b>" + cue_colour + " light on</b> 100 times</p>" +
         "<p> How many times out of 100 do you predict Mr X will be shocked? </p>",
       post_trial_gap: 250,
       data: {
@@ -578,7 +623,7 @@
       ],
       button_label: "Continue",
       require_movement: true,
-      prompt: "<p> Imagine Mr X observed the shock machine 100 times and only saw the " + cue_colour + " light off.</p>" +
+      prompt: "<p> Imagine Mr X observed the shock machine with the <b>" + cue_colour + " light off</b> 100 times.</p>" +
         "<p> How many times out of 100 do you predict Mr X will be shocked? </p>",
       post_trial_gap: 250,
       data: {
@@ -597,7 +642,7 @@
       ],
       button_label: "Continue",
       require_movement: true,
-      prompt: "<p> Imagine Mr X observed the shock machine 100 times and only saw the " + con_colour + " light on.</p>" +
+      prompt: "<p> Imagine Mr X observed the shock machine with the <b>" + con_colour + " light on</b> 100 times</p>" +
         "<p> How many times out of 100 do you predict Mr X will be shocked? </p>",
       post_trial_gap: 250,
       data: {
@@ -616,7 +661,7 @@
       ],
       button_label: "Continue",
       require_movement: true,
-      prompt: "<p> Imagine Mr X observed the shock machine 100 times and only saw the " + con_colour + " light off.</p>" +
+      prompt: "<p> Imagine Mr X observed the shock machine with the <b>" + con_colour + " light off</b> 100 times.</p>" +
         "<p> How many times out of 100 do you predict Mr X will be shocked? </p>",
       post_trial_gap: 250,
       data: {
@@ -635,7 +680,7 @@
       ],
       button_label: "Continue",
       require_movement: true,
-      prompt: "<p> Imagine Mr X observed the shock machine 100 times and only saw this light.</p>" +
+      prompt: "<p> Imagine Mr X observed the shock machine with the <b>" + cue_colour + " light on</b> 100 times</p>" +
         "<p> How many times out of 100 do you predict Mr X will be shocked? </p>",
       post_trial_gap: 250,
       data: {
@@ -654,7 +699,7 @@
       ],
       button_label: "Continue",
       require_movement: true,
-      prompt: "<p> Imagine Mr X observed the shock machine 100 times and the light was always off.</p>" +
+      prompt: "<p> Imagine Mr X observed the shock machine with the <b>" + cue_colour + " light off</b> 100 times</p>" +
         "<p> How many times out of 100 do you predict Mr X will be shocked? </p>",
       post_trial_gap: 250,
       data: {
@@ -674,7 +719,7 @@
     ],
     button_label: "Continue",
     require_movement: true,
-    prompt: "<p> Imagine Mr X observed the shock machine 100 times and only saw these lights.</p>" +
+    prompt: "<p> Imagine Mr X observed the shock machine with <b>both lights on</b> 100 times.</p>" +
       "<p> How many times out of 100 do you predict Mr X will be shocked? </p>",
     post_trial_gap: 250,
     data: {
@@ -693,7 +738,7 @@
     ],
     button_label: "Continue",
     require_movement: true,
-    prompt: "<p> Imagine Mr X observed the shock machine 100 times and only saw this light.</p>" +
+    prompt: "<p> Imagine Mr X observed the shock machine with the <b>" + cue_colour + " light off</b> and the <b>" + con_colour + " light on</b> 100 times.</p>" +
       "<p> How many times out of 100 do you predict Mr X will be shocked? </p>",
     post_trial_gap: 250,
     data: {
@@ -711,7 +756,7 @@
     ],
     button_label: "Continue",
     require_movement: true,
-    prompt: "<p> Imagine Mr X observed the shock machine 100 times and only saw this light.</p>" +
+    prompt: "<p> Imagine Mr X observed the shock machine with the <b>" + cue_colour + " light on</b> and the <b>" + con_colour + " light off</b> 100 times.</p>" +
       "<p> How many times out of 100 do you predict Mr X will be shocked? </p>",
     post_trial_gap: 250,
     data: {
@@ -730,7 +775,7 @@
     ],
     button_label: "Continue",
     require_movement: true,
-    prompt: "<p> Imagine Mr X observed the shock machine 100 times and the lights were always off.</p>" +
+    prompt: "<p> Imagine Mr X observed the shock machine with <b>both lights off</b> 100 times.</p>" +
       "<p> How many times out of 100 do you predict Mr X will be shocked? </p>",
     post_trial_gap: 250,
     data: {
@@ -738,6 +783,23 @@
       trialcategory: "fr"
     },
   };
+
+  var test_hidden_contingency_instructions_delay = {
+      type: "html-keyboard-response",
+      stimulus: 
+        "<p> For the next few questions, we are specifically interested in your judgements about the <b>" + con_colour + "</b> light</p>" +
+        whitespace,
+      response_ends_trial: false,
+      trial_duration: 2000,
+    };
+
+    var test_hidden_contingency_instructions_prompt = {
+      type: "html-keyboard-response",
+      stimulus: 
+        "<p> For the next few questions, we are specifically interested in your judgements about the <b>" + con_colour + "</b> light</p>" +
+        "<p>Press spacebar to continue</p>",
+      choices: [32],
+    };
 
   var test_hidden_contingency_A = {
     type: "html-slider-response",
@@ -751,8 +813,8 @@
     ],
     button_label: "Continue",
     require_movement: true,
-    prompt: "<p> In this experiment you observed trials where the <b>" + cue_colour + "</b> light was <b>on</b> and a shock occurred</p>" +
-      "<p> How often on these trials do you think the <b>" + con_colour + "</b> light on the other side of the machine was <b>on</b>? </p>",
+    prompt: "<p> In this experiment you observed some trials where the <b>" + cue_colour + " light was on</b> and a shock occurred</p>" +
+      "<p> How often on these trials do you think the <b>" + con_colour + " light </b>on the other side of the machine was <b>on</b>? </p>",
     post_trial_gap: 250,
     data: {
       trialtype: "fr_hidden_A",
@@ -772,8 +834,8 @@
     ],
     button_label: "Continue",
     require_movement: true,
-    prompt: "<p> In this experiment you observed trials where the <b>" + cue_colour + "</b> light was <b>on</b> and a shock <b>did not</b> occur</p>" +
-    "<p> How often on these trials do you think the <b>" + con_colour + "</b> light on the other side of the machine was <b>on</b>? </p>",
+    prompt: "<p> In this experiment you observed some trials where the <b>" + cue_colour + " light was on</b> and a shock <b>did not</b> occur</p>" +
+    "<p> How often on these trials do you think the <b>" + con_colour + " light</b> on the other side of the machine was <b>on</b>? </p>",
     post_trial_gap: 250,
     data: {
       trialtype: "fr_hidden_B",
@@ -793,8 +855,8 @@
     ],
     button_label: "Continue",
     require_movement: true,
-    prompt: "<p> In this experiment you observed trials where the <b>" + cue_colour + "</b> light was <b>off</b> and a shock occurred</p>" +
-    "<p> How often on these trials do you think the <b>" + con_colour + "</b> light on the other side of the machine was <b>on</b>? </p>",
+    prompt: "<p> In this experiment you observed some trials where the <b>" + cue_colour + " light was off</b> and a shock occurred</p>" +
+    "<p> How often on these trials do you think the <b>" + con_colour + " light</b> on the other side of the machine was <b>on</b>? </p>",
     post_trial_gap: 250,
     data: {
       trialtype: "fr_hidden_C",
@@ -814,8 +876,8 @@
     ],
     button_label: "Continue",
     require_movement: true,
-    prompt: "<p> In this experiment you observed trials where the <b>" + cue_colour + "</b> light was <b>off</b> and a shock <b>did not</b> occur</p>" +
-    "<p> How often on these trials do you think the <b>" + con_colour + "</b> light on the other side of the machine was <b>on</b>? </p>",
+    prompt: "<p> In this experiment you observed some trials where the <b>" + cue_colour + " light was off</b> and a shock <b>did not</b> occur</p>" +
+    "<p> How often on these trials do you think the <b>" + con_colour + " light</b> on the other side of the machine was <b>on</b>? </p>",
     post_trial_gap: 250,
     data: {
       trialtype: "fr_hidden_D",
@@ -828,7 +890,7 @@
     var test_mcheck_lightoff = {
     type: "survey-multi-choice",
     questions: [
-    { prompt: 'When observing the lights with Mr X during the task, were you looking at the ' + cue_colour + ' or ' + con_colour + ' of the shock machine?', 
+    { prompt: 'When observing the lights with Mr X during the task, were you looking at the <b>' + cue_colour + '</b> light or <b>' + con_colour + '</b> light on the shock machine?', 
       options: [cue_colour, con_colour,'both'],
       name: "mcheck", required: true},
     ],
@@ -852,6 +914,7 @@
     data: {
       trialtype: "oe_cr",
       trialcategory: "oe",
+      phase: "test",
     }
   };
 
@@ -866,6 +929,7 @@
     data: {
       trialtype: "oe_oc",
       trialcategory: "oe",
+      phase: "test",
     }
   };
 
@@ -922,15 +986,23 @@
         test_frequency_cueoff,
         test_frequency_conon,
         test_frequency_conoff,
-        test_hidden_contingency_A,
-        test_hidden_contingency_B,
-        test_hidden_contingency_C,
-        test_hidden_contingency_D,
       ],
       data: {
         phase: 'test'
       }
     };
+
+    var test_contingency_block = {
+      timeline: jsPsych.randomization.shuffle([
+        test_hidden_contingency_A,
+        test_hidden_contingency_B,
+        test_hidden_contingency_C,
+        test_hidden_contingency_D
+    ]),
+    data: {
+      phase: 'test'
+    }
+  };
   } else if (group == 3) {
     var test_causalratings_block = {
       timeline: jsPsych.randomization.shuffle([
@@ -963,17 +1035,27 @@
     ],
   }
 
+if (group == 2) {
   var timeline_test_trials = {
     timeline: [
       test_causalratings_block,
       test_frequency_block,
-      test_openend_block
+      test_hidden_contingency_instructions_delay,
+      test_hidden_contingency_instructions_prompt,
+      test_contingency_block,
+      test_openend_block,
+      test_mcheck_lightoff
     ],
   };
-
-  if (group == 2) {
-    timeline_test_trials.timeline.push(test_mcheck_lightoff)
-      };
+} else {
+  var timeline_test_trials = {
+    timeline: [
+      test_causalratings_block,
+      test_frequency_block,
+      test_openend_block,
+    ],
+  };
+};
 
   // welcome
   if (sample == "mturk") {
@@ -1087,7 +1169,7 @@
       type: "html-keyboard-response",
       stimulus: stim_cue +
         "<p> In this experiment, Mr X discovers a strange machine that delivers electric shocks.</p>" +
-        "<p> Mr X also notices a coloured light on the machine's interface.</p>" +
+        "<p> Mr X also notices the coloured light above on the machine. </p>" +
         "<p> The coloured circle above indicates the light is currently <b>ON</b>.</p>" +
         whitespace +
         whitespace,
@@ -1099,7 +1181,7 @@
       type: "html-keyboard-response",
       stimulus: stim_cue +
         "<p> In this experiment, Mr X discovers a strange machine that delivers electric shocks.</p>" +
-        "<p> Mr X also notices a coloured light on the machine's interface.</p>" +
+        "<p> Mr X also notices the coloured light above on the machine. </p>" +
         "<p> The coloured circle above indicates the light is currently <b>ON</b>.</p>" +
         whitespace +
         '<p> Press spacebar to continue </p>',
@@ -1110,7 +1192,7 @@
     var training_instructions_stimoff_delay = {
       type: "html-keyboard-response",
       stimulus: stim_off +
-        "<p> The light also periodically turns on and off. The grey circle above indicates the light is <b>OFF</b> </p>" +
+       "<p> The light also periodically turns on and off. The grey circle above shows what the light looks like when it is <b>OFF</b>.</p>" +
         "<p> In a moment you will observe the machine with Mr X. Each screen will indicate one occasion in which the light was either on or off and the shock either occurred or not.</p>" +
         "<p> Please use these observations to help Mr X determine whether there is any relationship between the light and shock. </p>" +
         "<p> This task should take no more than 5 minutes </p>" +
@@ -1123,7 +1205,7 @@
     var training_instructions_stimoff_prompt = {
       type: "html-keyboard-response",
       stimulus: stim_off + 
-        "<p> The light also periodically turns on and off. The grey circle above indicates the light is <b>OFF</b> </p>" +
+        "<p> The light also periodically turns on and off. The grey circle above shows what the light looks like when it is <b>OFF</b>.</p>" +
         "<p> In a moment you will observe the machine with Mr X. Each screen will indicate one occasion in which the light was either on or off and the shock either occurred or not.</p>" +
         "<p> Please use these observations to help Mr X determine whether there is any relationship between the light and shock. </p>" +
         "<p> This task should take no more than 5 minutes </p>" +
@@ -1136,9 +1218,9 @@
   } else if (group == 2) {
     var training_instructions_stimon_delay = {
       type: "html-keyboard-response",
-      stimulus: stim_cue +
+      stimulus: cue_first +
         "<p> In this experiment, Mr X discovers a strange machine that delivers electric shocks.</p>" +
-        "<p> Mr X also notices coloured lights on one side of the machine.</p>" +
+        "<p> Mr X also notices the coloured light above on one side of the machine. </p>" +
         "<p> The coloured circle above indicates the light is <b>ON</b>.</p>" +
         whitespace +
         whitespace,
@@ -1148,9 +1230,9 @@
 
     var training_instructions_stimon_prompt = {
       type: "html-keyboard-response",
-      stimulus: stim_cue +
+      stimulus: cue_first +
         "<p> In this experiment, Mr X discovers a strange machine that delivers electric shocks.</p>" +
-        "<p> Mr X also notices coloured lights on one side of the machine.</p>" +
+        "<p> Mr X also notices the coloured light above on one side of the machine. </p>" +
         "<p> The coloured circle above indicates the light is <b>ON</b>.</p>" +
         whitespace +
         '<p> Press spacebar to continue </p>',
@@ -1160,7 +1242,7 @@
 
     var training_instructions_stimrear_delay = {
       type: "html-keyboard-response",
-      stimulus: stim_context + 
+      stimulus: cue_second + 
         "<p> Mr X also notices that there is another coloured light on the other side of the machine.</p>" +
         "<p> The coloured circle above indicates this light is <b>ON</b>.</p>" +
         whitespace +
@@ -1172,7 +1254,7 @@
 
     var training_instructions_stimrear_prompt = {
       type: "html-keyboard-response",
-      stimulus: stim_context + 
+      stimulus: cue_second + 
       "<p> Mr X also notices that there is another coloured light on the other side of the machine.</p>" +
         "<p> The coloured circle above indicates this light is <b>ON</b>.</p>" +
         whitespace +
@@ -1186,7 +1268,7 @@
       type: "html-keyboard-response",
       stimulus: stim_off +
         "<p> Both lights on either side of the machine periodically turn on and off.</p>" +
-        "<p>The grey circle above shows what either light looks like when they are <b>OFF</b> </p>" +
+        "<p>The grey circle above shows what each light looks like when it is <b>OFF</b>.</p>" +
         whitespace +
         whitespace +
         whitespace,
@@ -1198,7 +1280,7 @@
       type: "html-keyboard-response",
       stimulus: stim_off + 
         "<p> Both lights on either side of the machine periodically turn on and off.</p>" +
-        "<p>The grey circle above shows what either light looks like when they are <b>OFF</b> </p>" +
+        "<p>The grey circle above shows what each light looks like when it is <b>OFF</b>.</p>" +
         whitespace +
         whitespace +
         '<p> Press spacebar to continue </p>',
@@ -1209,7 +1291,7 @@
     var training_instructions_task_delay = {
       type: "html-keyboard-response",
       stimulus:
-        "<p> In a moment you will observe the machine with Mr X. Each screen will indicate one occasion in which a light was either on or off and the shock either occurred or not. Unfortunately, Mr. X cannot see both lights at the same time, and so will observe only <b>one</b> light for the duration of the whole experiment.</p>" +
+        "<p> In a moment you will observe the machine with Mr X. Each screen will indicate one occasion in which a light was either on or off and the shock either occurred or not. Unfortunately, Mr. X cannot see both lights at the same time, and so can observe only <b>one</b> light for the duration of the whole experiment.</p>" +
         "<p> Please use these observations to help Mr X determine whether there is any relationship between the lights and shock.</p>" +
         "<p> This task should take no more than 5 minutes </p>" +
         whitespace,
@@ -1220,7 +1302,7 @@
     var training_instructions_task_prompt = {
       type: "html-keyboard-response",
       stimulus:
-        "<p> In a moment you will observe the machine with Mr X. Each screen will indicate one occasion in which a light was either on or off and the shock either occurred or not. Unfortunately, Mr. X cannot see both lights at the same time, and so will observe either the <b>one</b> light for the duration of the whole experiment.</p>" +
+        "<p> In a moment you will observe the machine with Mr X. Each screen will indicate one occasion in which a light was either on or off and the shock either occurred or not. Unfortunately, Mr. X cannot see both lights at the same time, and so can observe only <b>one</b> light for the duration of the whole experiment.</p>" +
         "<p> Please use these observations to help Mr X determine whether there is any relationship between the lights and shock.</p>" +
         "<p> This task should take no more than 5 minutes </p>" +
         '<p> Press spacebar to continue </p>',
@@ -1233,7 +1315,7 @@
       type: "html-keyboard-response",
       stimulus: stim_cue + stim_context +
         "<p> In this experiment, Mr X discovers a strange machine that delivers electric shocks.</p>" +
-        "<p> Mr X also notices coloured lights on the machine's interface.</p>" +
+        "<p> Mr X also notices the coloured lights above on the machine. </p>" +
         "<p> The coloured circles above indicate the lights are currently <b>ON</b>.</p>" +
         whitespace +
         whitespace,
@@ -1245,7 +1327,7 @@
       type: "html-keyboard-response",
       stimulus: stim_cue + stim_context  +
         "<p> In this experiment, Mr X discovers a strange machine that delivers electric shocks.</p>" +
-        "<p> Mr X also notices coloured lights on the machine's interface.</p>" +
+        "<p> Mr X also notices the coloured lights above on the machine. </p>" +
         "<p> The coloured circles above indicate the lights are currently <b>ON</b>.</p>" +
         whitespace +
         '<p> Press spacebar to continue </p>',
@@ -1256,7 +1338,7 @@
     var training_instructions_stimoff_delay = {
       type: "html-keyboard-response",
       stimulus: stim_off + stim_off  +
-        "<p> Both lights also periodically turn on and off. The grey circles above show what either light looks like when they are <b>OFF</b> </p>" +
+        "<p> The lights also periodically turn on and off. The grey circles above show what the lights looks like when they are <b>OFF</b>.</p>" +
         "<p> In a moment you will observe the machine with Mr X. Each screen will indicate one occasion in which the lights were either on or off and the shock either occurred or not.</p>" +
         "<p> Please use these observations to help Mr X determine whether there is any relationship between the lights and shock.</p>" +
         "<p> This task should take no more than 5 minutes </p>" +
@@ -1269,7 +1351,7 @@
     var training_instructions_stimoff_prompt = {
       type: "html-keyboard-response",
       stimulus: stim_off + stim_off +
-        "<p> Both lights also periodically turn on and off. The grey circles above show what either light looks like when they are <b>OFF</b> </p>" +
+        "<p> The lights also periodically turn on and off. The grey circles above show what the lights looks like when they are <b>OFF</b>.</p>" +
         "<p> In a moment you will observe the machine with Mr X. Each screen will indicate one occasion in which the lights were either on or off and the shock either occurred or not.</p>" +
         "<p> Please use these observations to help Mr X determine whether there is any relationship between the lights and shock. </p>" +
         "<p> This task should take no more than 5 minutes </p>" +
@@ -1400,8 +1482,7 @@
       "<p> In the following trials, you will be presented with a question about the lights on the shock machine. </p>" +
       "<p> Please answer these questions by adjusting the slider on this scale. </p>" +
       "<p> Try making a response below on this example scale. </p>",
-    labels: [0,
-      100
+    labels: [
     ],
     require_movement: true,
     post_trial_gap: 250
